@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf8">
+  <title>音声テスト</title>
+<head>
+<body>
+
+<audio id="bgm">
+  <source src="title.ogg" type="audio/ogg">
+</audio>
+<audio id="se">
+  <source src="click1.mp3" type="audio/mp3">
+</audio>
+
+
+<form>
+  <button type="button" id="btn-play-se">SE</button>
+  <button type="button" id="btn-play-bgm">BGM</button>
+</form>
+
+
+<script>
+const btnSe = document.querySelector("#btn-play-se");
+btnSe.addEventListener("click", ()=>{
+  document.querySelector("#se").play();
+});
+
+const btnBGM = document.querySelector("#btn-play-bgm");
+btnBGM.addEventListener("click", ()=>{
+  document.querySelector("#bgm").play();
+});
+</script>
+</body>
+</html>
