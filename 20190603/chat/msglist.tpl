@@ -7,8 +7,8 @@
 <body>
 
 <ol>
-{foreach $users as $i}
-  <li>{$i.id} : {$i.name}</li>
+{foreach $msgs as $i}
+  <li>{$i.user_id}|{$i.msg}</li>
 {/foreach}
 </ol>
 

@@ -13,10 +13,15 @@
     <h3>登録失敗</h3>
   {/if}
 {else}
-  <form action="/chat/useradd.php">
+  <form action="/chat/msgadd.php">
     <input type="hidden" name="mode" value="add">
-    ID:<input type="text" name="id"><br>
-    Name:<input type="text" name="name"><br>
+    <select name="user_id">
+      {foreach $users as $i}
+         <option value="{$i.id}">{$i.name}</option>
+      {/foreach}
+    </select>
+    <br>
+    メッセージ:<input type="text" name="msg"><br>
     <button>登録</button>
   </form>
 {/if}
