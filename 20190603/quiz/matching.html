@@ -42,6 +42,9 @@ joinBtn.addEventListener("click", function (){
     	  document.querySelector("#form-join").style.display = "none";
     	  document.querySelector("#nowloading").style.display = "block";
     	
+    	  // サーバから渡されたユーザーIDを保存
+    	  localStorage.setItem("uid", json["uid"]);
+    	
     	   // 3秒置きにサーバを確認する
     	  setInterval(()=>{
            const request = new XMLHttpRequest();
