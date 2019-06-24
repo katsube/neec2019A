@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf8">
+  <title>マッチング｜クイズゲーム</title>
+</head>
+<body>
+
+<h1>マッチング</h1>
+
+<form id="form-join">
+  <input type="text" name="uname" id="uname">
+  <button type="button" id="btn-join">参加</button>
+</form>
+
+<div id="nowloading" style="display:none">
+  Now Loading...
+</div>
+
+<script>
+const joinBtn = document.querySelector("#btn-join");
+joinBtn.addEventListener("click", function (){
+  let uname = document.querySelector("#uname");
+  
+  // Validation
+  if(uname.value === ""){
+    alert("ユーザー名を入力してください");
+    uname.style.backgroundColor = "lightpink";
+    uname.focus();
+    return(false);
+  }
+
+  // ユーザー登録
+  const request = new XMLHttpRequest();
+  request.open("GET", "/quiz/api/join.php?uname="+encodeURI(uname.value), false);
+  request.onreadystatechange = function(){
+    if( request.status === 200 || request.status === 304 ){
+    	let text = request.responseText;
+    	let json = JSON.parse(text);
+    	
+    	if( json["uid"] !== null ){
+    	  document.querySelector("#form-join").style.display = "none";
+    	  document.querySelector("#nowloading").style.display = "block";
+    	
+    	  // サーバから渡されたユーザーIDを保存
+    	  localStorage.setItem("uid", json["uid"]);
+    	
+    	   // 3秒置きにサーバを確認する
+    	  setInterval(()=>{
+           const request = new XMLHttpRequest();
+           request.open("GET", "/quiz/api/isready.php", false);
+           request.onreadystatechange = function(){
+             if( request.status === 200 || request.status === 304 ){
+               let text = request.responseText;
+               let json = JSON.parse(text);
+               if(json["status"] === true){
+                    location.href = 'battle.html';
+                  }
+               console.log(json);
+               }
+             };
+           request.send();
+    	   }
+    	   ,3000);
+    	}
+    }
+  }
+  request.send();
+});
+
+</script>
+</body>
+</html>

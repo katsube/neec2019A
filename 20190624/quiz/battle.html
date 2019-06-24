@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf8">
+  <title>バトル画面 | クイズゲーム</title>
+  <style>
+    #question{
+      border: 1px solid gray;
+      width: 300px;
+      height: 50px;
+    }
+  </style>
+</head>
+<body>
+
+<div id="question"></div>
+<form>
+  <input type="text" id="answer">
+  <button type="button" id="btn-answer">回答</button>
+</form>
+
+
+<script>
+let uid = localStorage.getItem("uid");
+
+// 問題文の取得
+requestAPI("/quiz/api/start.php", (json)=>{
+  const question = document.querySelector("#question");
+  question.innerHTML = json["quiz"][0];
+});
+
+// 回答の送信
+document.querySelector("#btn-answer").addEventListener("click",()=>{
+  const answer = document.querySelector("#answer").value;
+  const query  =    `answer=${encodeURI(answer)}`
+                     + "&"
+                  + `uid=${encodeURI(uid)}`;
+
+  requestAPI(`/quiz/api/receive.php?${query}`, (json)=>{
+    if(!json["status"]){
+      alert("サーバエラーが発生しました");
+      return(false);
+    }
+    // 全員の回答待ち
+   setInterval(()=>{
+    	requestAPI(`/quiz/api/isend.php`, (json)=>{
+    	  if(json["status"]){
+    	    location.href="result.html";
+    	  }
+    	});
+    }, 3000);
+  });
+});
+
+
+
+
+function requestAPI(api, callback){
+  const request = new XMLHttpRequest();
+  request.open("GET", api, false);
+  request.onreadystatechange = function(){
+    if( request.status === 200 || request.status === 304 ){
+    	let text = request.responseText;
+    	let json = JSON.parse(text);
+    	callback(json);
+     }
+  }
+  request.send();
+}
+</script>
+</body>
+</html>
